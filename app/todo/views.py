@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
@@ -6,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Todo
 from django.core.paginator import Paginator
+from todo.forms import TodoForm
 
 def home(request):
     """Ana sayfa - Giriş yapmışsa todo'larını göster"""
@@ -110,7 +110,6 @@ def todo_detail(request, id):
 
 @login_required
 def todo_create(request):
-    """Yeni todo oluştur"""
     if request.method == 'POST':
         title = request.POST['title']
         description = request.POST.get('description', '')
@@ -130,7 +129,7 @@ def todo_create(request):
         )
         
         messages.success(request, f'"{title}" todosu oluşturuldu!')
-        return redirect('todo_list')
+        return redirect('home')
     
     return render(request, 'todo/todo_create.html')
 
@@ -155,19 +154,37 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'Başarıyla çıkış yaptınız!')
     return redirect('home')
-=======
-from django.shortcuts import render
-from django.http import HttpResponse
 
-def todo_list(request,id):
-    return render(request,'todo/todo_list.html',{'id' : id})
+def search(request):
+##arama 
+    if "q" in request.GET and request.GET["q"] != "" and request.user.is_authenticated:
+        q = request.GET["q"]
+        todos = Todo.objects.filter(title__icontains=q, user=request.user)
+        print(todos)
+        return render(request, "todo/search.html", {"todos": todos, "query": q})
+    else:
+        return render(request, "todo/home.html")
 
-def login(request):
-    return render(request,'todo/login.html')
 
-def register(request):
-    return render(request,'todo/register.html')
-
-def home(request):
-    return render(request,'todo/home.html')
->>>>>>> 053c74df2c30cc2feccea9dd9c2f9dffaed6b0ae
+@login_required
+def todocreate(request):
+    form = TodoForm()
+    if request.method == 'POST':
+        form = TodoForm(request.POST)
+        
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            due_date = form.cleaned_data['due_date']
+            priority = form.cleaned_data['priority']
+            
+            Todo.objects.create(
+                user=request.user,
+                title=title,
+                description=description,
+                due_date=due_date,
+                priority=priority
+            )
+            messages.success(request, f'"{title}" todosu oluşturuldu!')
+            return redirect('home')
+    return render(request, 'todo/todocreate.html', {'form':form})

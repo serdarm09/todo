@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if todos %}
+    <div class="container mt-5">
+        <h2>Arama Sonuçları</h2>
+        <p>{{ todos|length }} sonuç bulundu.</p>
+        <div class="list-group">
+            {% for todo in todos %}
+                <a href="{% url 'todo_detail' todo.id %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ todo.title }}</h6>
+                        <small>{{ todo.created_at|date:"d M Y" }}</small>
+                    </div>
+                    <p class="mb-1">{{ todo.description|truncatewords:10 }}</p>
+                    <small class="badge {% if todo.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                        {{ todo.get_status_display }}
+                    </small>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <div class="container mt-5">
+        <h2>Arama Sonuçları</h2>
+        <p>Hiçbir sonuç bulunamadı.</p>
+    </div>
+{% endif %}
+{% endblock %}

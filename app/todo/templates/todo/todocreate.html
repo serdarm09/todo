@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <form name="todo_create" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Oluştur</button>
+    </form>
+</div>
+{% endblock %}
