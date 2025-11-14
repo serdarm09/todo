@@ -157,3 +157,20 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Vercel ayarları
+import sys
+if 'runserver' not in sys.argv:
+    DEBUG = False
+
+# CSRF ve Security ayarları (production için)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = False  # Vercel proxy ile ilgili
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+# CORS ayarları
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://vercel.app",
+    "https://*.vercel.app",
+]
