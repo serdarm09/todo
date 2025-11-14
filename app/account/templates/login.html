@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+</head>
+<body>
+    <marquee style="font-size:xx-large">Login sayfasına hoş geldiniz</marquee>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Adınız" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit">Giriş Yap</button>
+    </form>
+</body>
+</html>

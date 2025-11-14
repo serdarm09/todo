@@ -1,0 +1,1 @@
+# Vercel app için __init__.py
